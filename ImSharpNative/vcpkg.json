@@ -1,0 +1,19 @@
+{
+  "name" : "imsharpnative",
+  "version-string" : "1.0.0",
+  "builtin-baseline" : "f0c8848cde589649bca3ab3649668540403786ce",
+  "dependencies" : [ {
+    "name" : "imgui",
+    "version>=" : "1.91.0",
+    "features" : [ "glfw-binding", "opengl3-binding", "docking-experimental" ]
+  }, {
+    "name" : "imguizmo",
+    "version>=" : "2024-05-29"
+  }, {
+    "name" : "implot",
+    "version>=" : "0.16"
+  }, {
+    "name" : "glad",
+    "version>=" : "0.1.36"
+  } ]
+}

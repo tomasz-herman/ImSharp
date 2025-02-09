@@ -1,0 +1,42 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <CMakeSourceDir>$(MSBuildThisFileDirectory)</CMakeSourceDir>
+        <CMakeBuildDir>$(CMakeSourceDir)/cmake-build</CMakeBuildDir>
+        <CMakeExecutable>cmake</CMakeExecutable>
+        <CMakeGenerator>Ninja</CMakeGenerator>
+        <BuildConfiguration>$(Configuration)</BuildConfiguration>
+
+        <VcpkgRoot>$(MSBuildThisFileDirectory)../vcpkg</VcpkgRoot>
+        <VcpkgTool>$(VcpkgRoot)/vcpkg</VcpkgTool>
+        <CMakeToolchainFile>$(VcpkgRoot)/scripts/buildsystems/vcpkg.cmake</CMakeToolchainFile>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <CMakeBuildOutput Condition="$([MSBuild]::IsOSPlatform('Windows'))">$(CMakeBuildDir)/ImSharpNative.dll</CMakeBuildOutput>
+        <CMakeBuildOutput Condition="$([MSBuild]::IsOSPlatform('Linux'))">$(CMakeBuildDir)/libImSharpNative.so</CMakeBuildOutput>
+        <CMakeBuildOutput Condition="$([MSBuild]::IsOSPlatform('OSX'))">$(CMakeBuildDir)/libImSharpNative.dylib</CMakeBuildOutput>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
+        <CoreCompileDependsOn>
+          $(CoreCompileDependsOn);AssignTargetPaths
+        </CoreCompileDependsOn>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <CppFiles Include="$(MSBuildThisFileDirectory)**\CMakeLists.txt" />
+        <CppFiles Include="$(MSBuildThisFileDirectory)**\*.cpp" />
+        <CppFiles Include="$(MSBuildThisFileDirectory)**\*.c" />
+        <CppFiles Include="$(MSBuildThisFileDirectory)**\*.h" />
+        <CppFiles Include="$(MSBuildThisFileDirectory)**\*.hpp" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Content Include="$(CMakeBuildOutput)">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
+
+    <Import Project="$(MSBuildThisFileDirectory)CMake.targets" />
+</Project>
