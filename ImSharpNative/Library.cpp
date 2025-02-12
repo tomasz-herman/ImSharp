@@ -4,6 +4,7 @@
 #include <print>
 #include "Library.h"
 #include <GLFW/glfw3.h>
+#include <implot.h>
 
 ImGuiContext* ImGuiCreateContext()
 {
@@ -46,6 +47,18 @@ void ImGuiImplGlfwNewFrame()
 void ImGuiShowDemoWindow()
 {
     ImGui::ShowDemoWindow();
+}
+
+ImPlotContext* ImPlotCreateContext() {
+    return ImPlot::CreateContext();
+}
+
+void ImPlotShowDemoWindow() {
+    ImPlot::ShowDemoWindow();
+}
+
+void ImPlotDestroyContext() {
+    ImPlot::DestroyContext();
 }
 
 void ImGuiNewFrame()

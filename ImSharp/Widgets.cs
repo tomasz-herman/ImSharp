@@ -8,6 +8,9 @@ public partial class Widgets
     public static partial void ImGuiShowDemoWindow();
     
     [LibraryImport("ImSharpNative")]
+    public static partial void ImPlotShowDemoWindow();
+    
+    [LibraryImport("ImSharpNative")]
     public static partial void ImGuiNewFrame();
     
     [LibraryImport("ImSharpNative")]

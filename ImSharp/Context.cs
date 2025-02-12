@@ -9,4 +9,10 @@ public partial class Context
     
     [LibraryImport("ImSharpNative")]
     public static partial void ImGuiDestroyContext();
+    
+    [LibraryImport("ImSharpNative")]
+    public static partial nint ImPlotCreateContext();
+    
+    [LibraryImport("ImSharpNative")]
+    public static partial void ImPlotDestroyContext();
 }

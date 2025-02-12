@@ -22,6 +22,7 @@ public class DemoWindow
         GL.Viewport(0, 0, width, height);
 
         ImSharp.Context.ImGuiCreateContext();
+        ImSharp.Context.ImPlotCreateContext();
         ImSharp.Glfw.ImGuiImplGlfwInitForOpenGL(window, true);
         ImSharp.OpenGL3.ImGuiImplOpenGL3Init();
         
@@ -38,6 +39,7 @@ public class DemoWindow
             ImSharp.Widgets.ImGuiNewFrame();
         
             ImSharp.Widgets.ImGuiShowDemoWindow();
+            ImSharp.Widgets.ImPlotShowDemoWindow();
         
             ImSharp.Widgets.ImGuiRender();
         
@@ -48,6 +50,7 @@ public class DemoWindow
         
         ImSharp.OpenGL3.ImGuiImplOpenGL3Shutdown();
         ImSharp.Glfw.ImGuiImplGlfwShutdown();
+        ImSharp.Context.ImPlotDestroyContext();
         ImSharp.Context.ImGuiDestroyContext();
         
         GLFW.DestroyWindow(window);

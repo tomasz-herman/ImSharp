@@ -1,6 +1,7 @@
 #pragma once
 
 #include <glad/glad.h>
+#include <implot.h>
 #include <unordered_map>
 
 #if defined(_WIN32) || defined(_WIN64)
@@ -19,6 +20,10 @@ extern "C" EXPORT void ImGuiImplOpenGL3NewFrame();
 extern "C" EXPORT void ImGuiImplGlfwNewFrame();
 
 extern "C" EXPORT void ImGuiShowDemoWindow();
+
+extern "C" EXPORT ImPlotContext* ImPlotCreateContext();
+extern "C" EXPORT void ImPlotShowDemoWindow();
+extern "C" EXPORT void ImPlotDestroyContext();
 
 extern "C" EXPORT void ImGuiNewFrame();
 extern "C" EXPORT void ImGuiRender();
