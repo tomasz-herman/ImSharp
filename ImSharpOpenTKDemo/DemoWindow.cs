@@ -1,4 +1,5 @@
-﻿using OpenTK.Graphics.OpenGL4;
+﻿using ImSharp.Backends;
+using OpenTK.Graphics.OpenGL4;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace ImSharpOpenTKDemo;
@@ -21,10 +22,10 @@ public class DemoWindow
         GLFW.GetFramebufferSize(window, out int width, out int height);
         GL.Viewport(0, 0, width, height);
 
-        ImSharp.Context.ImGuiCreateContext();
-        ImSharp.Context.ImPlotCreateContext();
-        ImSharp.Glfw.ImGuiImplGlfwInitForOpenGL(window, true);
-        ImSharp.OpenGL3.ImGuiImplOpenGL3Init();
+        ImGuiCreateContext();
+        ImPlotCreateContext();
+        ImGuiImplGlfwInitForOpenGL(window, true);
+        ImGuiImplOpenGL3Init();
         
         GL.ClearColor(0.3f, 0.5f, 0.8f, 1.0f);
 
@@ -34,24 +35,24 @@ public class DemoWindow
             
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             
-            ImSharp.OpenGL3.ImGuiImplOpenGL3NewFrame();
-            ImSharp.Glfw.ImGuiImplGlfwNewFrame();
-            ImSharp.Widgets.ImGuiNewFrame();
+            Native.ImGuiImplOpenGL3NewFrame();
+            ImGuiImplGlfwNewFrame();
+            ImGuiNewFrame();
         
-            ImSharp.Widgets.ImGuiShowDemoWindow();
-            ImSharp.Widgets.ImPlotShowDemoWindow();
+            ImGuiShowDemoWindow();
+            ImPlotShowDemoWindow();
         
-            ImSharp.Widgets.ImGuiRender();
+            ImGuiRender();
         
-            ImSharp.OpenGL3.ImGuiImplOpenGL3RenderDrawData();
+            ImGuiImplOpenGL3RenderDrawData();
         
             GLFW.SwapBuffers(window);
         }
         
-        ImSharp.OpenGL3.ImGuiImplOpenGL3Shutdown();
-        ImSharp.Glfw.ImGuiImplGlfwShutdown();
-        ImSharp.Context.ImPlotDestroyContext();
-        ImSharp.Context.ImGuiDestroyContext();
+        ImGuiImplOpenGL3Shutdown();
+        ImGuiImplGlfwShutdown();
+        ImPlotDestroyContext();
+        ImGuiDestroyContext();
         
         GLFW.DestroyWindow(window);
         GLFW.Terminate();

@@ -2,7 +2,7 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImSharp", "ImSharp\ImSharp.csproj", "{1023A01D-E180-4319-9384-A69F2FCC6988}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImSharpOpenTKDemo", "ImSharpOpenTKDemo\ImSharpOpenTKDemo.csproj", "{15F57CE1-703A-4E41-925E-CDB6F7641FBF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImSharpGenerator", "ImSharpGenerator\ImSharpGenerator.csproj", "{150854C2-7C30-4B45-99C6-A6A57C8DF973}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -14,9 +14,9 @@ Global
 		{1023A01D-E180-4319-9384-A69F2FCC6988}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1023A01D-E180-4319-9384-A69F2FCC6988}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1023A01D-E180-4319-9384-A69F2FCC6988}.Release|Any CPU.Build.0 = Release|Any CPU
-		{15F57CE1-703A-4E41-925E-CDB6F7641FBF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{15F57CE1-703A-4E41-925E-CDB6F7641FBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{15F57CE1-703A-4E41-925E-CDB6F7641FBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{15F57CE1-703A-4E41-925E-CDB6F7641FBF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{150854C2-7C30-4B45-99C6-A6A57C8DF973}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{150854C2-7C30-4B45-99C6-A6A57C8DF973}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{150854C2-7C30-4B45-99C6-A6A57C8DF973}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{150854C2-7C30-4B45-99C6-A6A57C8DF973}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

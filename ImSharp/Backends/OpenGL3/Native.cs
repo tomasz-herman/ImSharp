@@ -1,8 +1,8 @@
 using System.Runtime.InteropServices;
 
-namespace ImSharp;
+namespace ImSharp.Backends.OpenGL3;
 
-public partial class OpenGL3
+public static partial class Native
 {
     [return: MarshalAs(UnmanagedType.U1)]
     [LibraryImport("ImSharpNative", StringMarshalling = StringMarshalling.Utf8)]

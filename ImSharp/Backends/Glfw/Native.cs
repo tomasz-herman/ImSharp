@@ -2,7 +2,7 @@ using System.Runtime.InteropServices;
 
 namespace ImSharp;
 
-public partial class Glfw
+public static partial class Native
 {
     [return: MarshalAs(UnmanagedType.U1)]
     [LibraryImport("ImSharpNative")]

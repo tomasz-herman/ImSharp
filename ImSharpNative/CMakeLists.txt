@@ -19,6 +19,40 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(OpenTK_Glfw)
 
+FetchContent_Declare(
+        cimgui
+        GIT_REPOSITORY https://github.com/cimgui/cimgui.git
+        GIT_TAG master
+)
+FetchContent_MakeAvailable(cimgui)
+
+FetchContent_Declare(
+        cimplot
+        GIT_REPOSITORY https://github.com/cimgui/cimplot.git
+        GIT_TAG master
+)
+FetchContent_MakeAvailable(cimplot)
+
+FetchContent_Declare(
+        cimnodes
+        GIT_REPOSITORY https://github.com/cimgui/cimnodes.git
+        GIT_TAG master
+)
+FetchContent_MakeAvailable(cimnodes)
+
+FetchContent_Declare(
+        cimguizmo
+        GIT_REPOSITORY https://github.com/cimgui/cimguizmo.git
+        GIT_TAG master
+)
+FetchContent_MakeAvailable(cimguizmo)
+
+add_definitions(-DIMNODES_NAMESPACE=imnodes)
+set(CIMGUI_SRC ${cimgui_SOURCE_DIR}/cimgui.cpp)
+set(CIMPLOT_SRC ${cimplot_SOURCE_DIR}/cimplot.cpp)
+set(CIMNODES_SRC ${cimnodes_SOURCE_DIR}/cimnodes.cpp)
+set(CIMGUIMO_SRC ${cimguizmo_SOURCE_DIR}/cimguizmo.cpp)
+
 if(WIN32)
     set(GLFW_LIB "${CMAKE_BINARY_DIR}/${GLFW_OPENTK_DIR}/runtimes/win-x64/native/glfw3.dll")
 elseif(APPLE)
@@ -34,20 +68,29 @@ message("Toolchain used: ${CMAKE_TOOLCHAIN_FILE}")
 add_library(glfw3 SHARED IMPORTED)
 set_target_properties(glfw3 PROPERTIES IMPORTED_LOCATION "${GLFW_LIB}")
 
-find_package(imgui CONFIG REQUIRED)
-find_package(implot CONFIG REQUIRED)
-find_package(unofficial-imguizmo CONFIG REQUIRED)
 find_package(glad CONFIG REQUIRED)
 find_package(glfw3 CONFIG REQUIRED)
-find_package(unofficial-imguizmo CONFIG REQUIRED)
 
-set (LIBRARIES
-        imgui::imgui
-        implot::implot
-        unofficial::imguizmo::imguizmo
-        glfw3
-        glad::glad
+target_link_libraries(cimplot PRIVATE cimgui)
+
+add_library(${PROJECT_NAME} SHARED
+        BackendImpl.h
+        BackendImpl.cpp
+        ${CIMGUI_SRC}
+        ${CIMPLOT_SRC}
+        ${CIMNODES_SRC}
+        ${CIMGUIMO_SRC})
+
+target_link_libraries(${PROJECT_NAME} PUBLIC glfw3 glad::glad)
+
+target_include_directories(${PROJECT_NAME} PUBLIC ${cimgui_SOURCE_DIR}/imgui/backends)
+target_include_directories(${PROJECT_NAME} PUBLIC ${cimgui_SOURCE_DIR}/imgui)
+
+target_include_directories(${PROJECT_NAME} PUBLIC
+        ${cimgui_SOURCE_DIR}
+        ${cimplot_SOURCE_DIR}
+        ${cimnodes_SOURCE_DIR}
+        ${cimguizmo_SOURCE_DIR}
 )
 
-add_library(${PROJECT_NAME} SHARED Library.h Library.cpp)
-target_link_libraries(${PROJECT_NAME} PRIVATE ${LIBRARIES})
+set_target_properties(${PROJECT_NAME} PROPERTIES POSITION_INDEPENDENT_CODE ON)

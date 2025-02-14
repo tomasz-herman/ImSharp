@@ -36,6 +36,8 @@
         <Content Include="$(CMakeBuildOutput)">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
+        <AdditionalFiles Include="$(CMakeBuildDir)/_deps/**/generator/output/definitions.json" />
+        <AdditionalFiles Include="$(CMakeBuildDir)/_deps/**/generator/output/structs_and_enums.json" />
     </ItemGroup>
 
     <Import Project="$(MSBuildThisFileDirectory)CMake.targets" />
