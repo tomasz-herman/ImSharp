@@ -23,6 +23,17 @@ public class Generator : IIncrementalGenerator
 
             List<EnumDefinition> enums = [];
             List<StructDefinition> structs = [];
+            TypesInfo typesInfo = new TypesInfo();
+            foreach (var file in files.Where(file => file.Path.EndsWith("typedefs_dict.json", StringComparison.OrdinalIgnoreCase)))
+            {
+                productionContext.Info("JSON file detected", $"File: {file.Path}");
+                
+                string jsonContent = file.GetText()?.ToString() ?? "{}";
+                using JsonTextReader reader = new JsonTextReader(new StringReader(jsonContent));
+                JObject jsonTypes = JObject.Load(reader);
+                typesInfo.AddTypes(jsonTypes);
+            }
+            
             foreach (var file in files.Where(file => file.Path.EndsWith("structs_and_enums.json", StringComparison.OrdinalIgnoreCase)))
             {
                 productionContext.Info("JSON file detected", $"File: {file.Path}");
@@ -45,7 +56,8 @@ public class Generator : IIncrementalGenerator
                 builder.AppendLine($"// {@struct.Name}({@struct.Fields.Count}):");
                 foreach (var field in @struct.Fields)
                 {
-                    builder.AppendLine($"// - {field}");
+                    typesInfo.TryResolveType(field.Type, out var resolved);
+                    builder.AppendLine($"// - [{resolved}] {field}");
                 }
                 productionContext.AddSource($"{@struct.Name}.g.cs", SourceText.From(builder.ToString(), Encoding.UTF8));
             }
