@@ -21,29 +21,27 @@ public class Generator : IIncrementalGenerator
                 productionContext.Warning("No JSON files found", "No additional .json files were detected.");
             }
 
-            foreach (var file in files)
+            List<EnumDefinition> enums = [];
+            List<StructDefinition> structs = [];
+            foreach (var file in files.Where(file => file.Path.EndsWith("structs_and_enums.json", StringComparison.OrdinalIgnoreCase)))
             {
                 productionContext.Info("JSON file detected", $"File: {file.Path}");
+                
+                string jsonContent = file.GetText()?.ToString() ?? "{}";
+                using JsonTextReader reader = new JsonTextReader(new StringReader(jsonContent));
+                JObject jsonTypes = JObject.Load(reader);
+                enums.AddRange(jsonTypes["enums"]?.Select(jt => new EnumDefinition((JProperty)jt)) ?? []);
+                structs.AddRange(jsonTypes["structs"]?.Select(jt => new StructDefinition((JProperty)jt)) ?? []);
+            }
 
-                if (file.Path.EndsWith("structs_and_enums.json", StringComparison.OrdinalIgnoreCase))
-                {
-                    string jsonContent = file.GetText()?.ToString() ?? "{}";
-                    using JsonTextReader reader = new JsonTextReader(new StringReader(jsonContent));
-                    JObject jsonTypes = JObject.Load(reader);
-                    var enums = jsonTypes["enums"]?
-                        .Select(jt => new EnumDefinition((JProperty)jt))
-                        .Where(x => x != null).ToArray();
-                    if (enums is null or { Length: 0 })
-                    {
-                        productionContext.Report("No enums found", "No enums were detected.");
-                        continue;
-                    }
-
-                    foreach (var @enum in enums)
-                    {
-                        productionContext.AddSource($"{@enum.FriendlyName}.g.cs", SourceText.From(@enum.GenerateSource(), Encoding.UTF8));
-                    }
-                }
+            foreach (var @enum in enums)
+            {
+                productionContext.AddSource($"{@enum.FriendlyName}.g.cs", SourceText.From(@enum.GenerateSource(), Encoding.UTF8));
+            }
+            
+            foreach (var @struct in structs)
+            {
+                productionContext.AddSource($"{@struct.Name}.g.cs", SourceText.From($"// {@struct.Name}", Encoding.UTF8));
             }
         });
     }

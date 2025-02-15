@@ -15,7 +15,7 @@ public class EnumDefinition : ISourceGenerator, IEnumerable<EnumDefinition.EnumV
     {
         Name = enumJson.Name;
         Flags = Name.Contains("Flags");
-        FriendlyName = Name.Replace("Flags", "").Replace("_", "");
+        FriendlyName = Name.Replace("_", "");
         foreach (var field in enumJson.Values())
         {
             var name = field["name"]?.ToString();
