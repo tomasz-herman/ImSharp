@@ -41,7 +41,13 @@ public class Generator : IIncrementalGenerator
             
             foreach (var @struct in structs)
             {
-                productionContext.AddSource($"{@struct.Name}.g.cs", SourceText.From($"// {@struct.Name}", Encoding.UTF8));
+                StringBuilder builder = new StringBuilder();
+                builder.AppendLine($"// {@struct.Name}({@struct.Fields.Count}):");
+                foreach (var field in @struct.Fields)
+                {
+                    builder.AppendLine($"// - {field}");
+                }
+                productionContext.AddSource($"{@struct.Name}.g.cs", SourceText.From(builder.ToString(), Encoding.UTF8));
             }
         });
     }

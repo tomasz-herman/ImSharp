@@ -38,6 +38,7 @@
         </Content>
         <AdditionalFiles Include="$(CMakeBuildDir)/_deps/**/generator/output/definitions.json" />
         <AdditionalFiles Include="$(CMakeBuildDir)/_deps/**/generator/output/structs_and_enums.json" />
+        <AdditionalFiles Include="$(CMakeBuildDir)/_deps/**/generator/output/typedefs_dict.json" />
     </ItemGroup>
 
     <Import Project="$(MSBuildThisFileDirectory)CMake.targets" />
