@@ -23,27 +23,26 @@ public class EnumDefinition
 
     public string GenerateSource()
     {
-        StringBuilder sb = new();
+        using var writer = new CSharpWriter();
 
-        sb.AppendLine("namespace ImSharp");
-        sb.AppendLine("{");
-
-        if (Flags)
+        writer.WriteLineIndented("namespace ImSharp");
+        using (writer.WriteBlock())
         {
-            sb.AppendLine("    [System.Flags]");
+            if (Flags)
+            {
+                writer.WriteLineIndented("[Flags]");
+            }
+            
+            writer.WriteLineIndented($"public enum {Name}");
+            using (writer.WriteBlock())
+            {
+                foreach (var keyValue in Values)
+                {
+                    writer.WriteLineIndented($"{keyValue.Key} = {keyValue.Value},");
+                }
+            }
         }
 
-        sb.AppendLine($"    public enum {Name}");
-        sb.AppendLine("    {");
-
-        foreach (var keyValue in Values)
-        {
-            sb.AppendLine($"        {keyValue.Key} = {keyValue.Value},");
-        }
-
-        sb.AppendLine("    }");
-        sb.AppendLine("}");
-
-        return sb.ToString();
+        return writer.ToString();
     }
 }
