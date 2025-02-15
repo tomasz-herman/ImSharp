@@ -18,12 +18,12 @@ public class Generator : IIncrementalGenerator
         {
             if (files.IsEmpty)
             {
-                productionContext.Report("No JSON files found", "No additional .json files were detected.");
+                productionContext.Warning("No JSON files found", "No additional .json files were detected.");
             }
 
             foreach (var file in files)
             {
-                productionContext.Report("JSON file detected", $"File: {file.Path}");
+                productionContext.Info("JSON file detected", $"File: {file.Path}");
 
                 if (file.Path.EndsWith("structs_and_enums.json", StringComparison.OrdinalIgnoreCase))
                 {
@@ -51,6 +51,22 @@ public class Generator : IIncrementalGenerator
 
 internal static class ContextExtensions
 {
+    public static void Info(this SourceProductionContext ctx, string title, string message)
+    {
+        ctx.Report(title, message, "Info", DiagnosticSeverity.Info);
+    }
+    
+    public static void Warning(this SourceProductionContext ctx, string title, string message)
+    {
+        ctx.Report(title, message, "Warning");
+    }
+    
+    public static void Error(this SourceProductionContext ctx, string title, string message)
+    {
+        ctx.Report(title, message, "Error", DiagnosticSeverity.Error);
+
+    }
+    
     public static void Report(this SourceProductionContext ctx, string title, string message, string category = "Debug", DiagnosticSeverity severity = DiagnosticSeverity.Warning)
     {
         var description = new DiagnosticDescriptor(
