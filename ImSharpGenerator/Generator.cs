@@ -41,7 +41,7 @@ public class Generator : IIncrementalGenerator
 
                     foreach (var @enum in enums)
                     {
-                        productionContext.AddSource($"{@enum.Name}.g.cs", SourceText.From(@enum.GenerateSource(), Encoding.UTF8));
+                        productionContext.AddSource($"{@enum.FriendlyName}.g.cs", SourceText.From(@enum.GenerateSource(), Encoding.UTF8));
                     }
                 }
             }
