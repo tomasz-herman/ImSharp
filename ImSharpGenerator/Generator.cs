@@ -47,9 +47,15 @@ public class Generator : IIncrementalGenerator
 
             foreach (var @enum in enums)
             {
+                typesInfo.RegisterType(@enum.Name, @enum.FriendlyName);
                 pCtx.AddSource($"{@enum.FriendlyName}.g.cs", SourceText.From(@enum.GenerateSource(), Encoding.UTF8));
             }
-            
+
+            foreach (var @struct in structs)
+            {
+                typesInfo.RegisterType(@struct.Name, @struct.Name);
+            }
+
             foreach (var @struct in structs)
             {
                 StringBuilder builder = new StringBuilder();

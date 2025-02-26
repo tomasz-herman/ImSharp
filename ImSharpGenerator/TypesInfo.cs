@@ -4,9 +4,13 @@ namespace ImSharpGenerator;
 
 public class TypesInfo
 {
-    private static Dictionary<string, string> KnownTypes { get; } = new()
+    private Dictionary<string, string> WellKnownTypes { get; } = new()
     {
+        ["long long"] = "long",
+        ["long"] = "long",
         ["int"] = "int",
+        ["short"] = "short",
+        ["char"] = "byte",
         ["signed long long"] = "long",
         ["signed long"] = "long",
         ["signed int"] = "int",
@@ -20,10 +24,16 @@ public class TypesInfo
         ["float"] = "float",
         ["double"] = "double",
         ["bool"] = "byte",
-        ["void"] = "void"
+        ["void"] = "void",
+        ["ImBitArrayForNamedKeys"] = "ImBitArrayForNamedKeys"
     };
 
     public Dictionary<string, string> Types { get; } = [];
+
+    public void RegisterType(string name, string friendlyName)
+    {
+        WellKnownTypes.Add(name, friendlyName);
+    }
 
     public void AddTypes(JObject typesJson)
     {
@@ -41,13 +51,30 @@ public class TypesInfo
 
     public bool TryResolveType(string type, out string? resolved)
     {
-        resolved = null;
-        if (KnownTypes.TryGetValue(type, out var knownType))
+        int ptrCount = 0;
+        while (type.EndsWith("*"))
         {
-            resolved = knownType;
+            ptrCount++;
+            type = type.Substring(0, type.Length - 1);
+        }
+
+        resolved = null;
+
+        if (WellKnownTypes.TryGetValue(type, out var knownType))
+        {
+            resolved = knownType + new string('*', ptrCount);
             return true;
         }
-        if (Types.TryGetValue(type, out var nextType)) return TryResolveType(nextType, out resolved);
+
+        if (Types.TryGetValue(type, out var nextType))
+        {
+            if (TryResolveType(nextType, out resolved))
+            {
+                resolved += new string('*', ptrCount);
+                return true;
+            }
+        }
+
         return false;
     }
 }

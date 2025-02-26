@@ -23,6 +23,12 @@ public class StructDefinition : ISourceGenerator
             }
         }
     }
+    
+    public StructDefinition(string name, params StructField[] fields)
+    {
+        Name = name;
+        Fields.AddRange(fields);
+    }
 
     public string GenerateSource()
     {
@@ -36,7 +42,7 @@ public class StructDefinition : ISourceGenerator
         public int Size { get; }
         public string? TemplateType { get; }
 
-        public StructField(string name, string type, int size, string? templateType)
+        public StructField(string name, string type, int size, string? templateType = null)
         {
             Name = name;
             Type = type;
