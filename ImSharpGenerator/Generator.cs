@@ -14,11 +14,11 @@ public class Generator : IIncrementalGenerator
         var jsonFiles = context.AdditionalTextsProvider
             .Where(file => file.Path.EndsWith(".json", StringComparison.OrdinalIgnoreCase)).Collect();
 
-        context.RegisterSourceOutput(jsonFiles, (productionContext, files) =>
+        context.RegisterSourceOutput(jsonFiles, (pCtx, files) =>
         {
             if (files.IsEmpty)
             {
-                productionContext.Warning("No JSON files found", "No additional .json files were detected.");
+                pCtx.Warning("No JSON files found", "No additional .json files were detected.");
             }
 
             List<EnumDefinition> enums = [];
@@ -26,7 +26,7 @@ public class Generator : IIncrementalGenerator
             TypesInfo typesInfo = new TypesInfo();
             foreach (var file in files.Where(file => file.Path.EndsWith("typedefs_dict.json", StringComparison.OrdinalIgnoreCase)))
             {
-                productionContext.Info("JSON file detected", $"File: {file.Path}");
+                pCtx.Info("JSON file detected", $"File: {file.Path}");
                 
                 string jsonContent = file.GetText()?.ToString() ?? "{}";
                 using JsonTextReader reader = new JsonTextReader(new StringReader(jsonContent));
@@ -36,7 +36,7 @@ public class Generator : IIncrementalGenerator
             
             foreach (var file in files.Where(file => file.Path.EndsWith("structs_and_enums.json", StringComparison.OrdinalIgnoreCase)))
             {
-                productionContext.Info("JSON file detected", $"File: {file.Path}");
+                pCtx.Info("JSON file detected", $"File: {file.Path}");
                 
                 string jsonContent = file.GetText()?.ToString() ?? "{}";
                 using JsonTextReader reader = new JsonTextReader(new StringReader(jsonContent));
@@ -47,7 +47,7 @@ public class Generator : IIncrementalGenerator
 
             foreach (var @enum in enums)
             {
-                productionContext.AddSource($"{@enum.FriendlyName}.g.cs", SourceText.From(@enum.GenerateSource(), Encoding.UTF8));
+                pCtx.AddSource($"{@enum.FriendlyName}.g.cs", SourceText.From(@enum.GenerateSource(), Encoding.UTF8));
             }
             
             foreach (var @struct in structs)
@@ -59,7 +59,7 @@ public class Generator : IIncrementalGenerator
                     typesInfo.TryResolveType(field.Type, out var resolved);
                     builder.AppendLine($"// - [{resolved}] {field}");
                 }
-                productionContext.AddSource($"{@struct.Name}.g.cs", SourceText.From(builder.ToString(), Encoding.UTF8));
+                pCtx.AddSource($"{@struct.Name}.g.cs", SourceText.From(builder.ToString(), Encoding.UTF8));
             }
         });
     }
@@ -67,6 +67,11 @@ public class Generator : IIncrementalGenerator
 
 internal static class ContextExtensions
 {
+    public static void Hidden(this SourceProductionContext ctx, string title, string message)
+    {
+        ctx.Report(title, message, "Info", DiagnosticSeverity.Hidden);
+    }
+    
     public static void Info(this SourceProductionContext ctx, string title, string message)
     {
         ctx.Report(title, message, "Info", DiagnosticSeverity.Info);
