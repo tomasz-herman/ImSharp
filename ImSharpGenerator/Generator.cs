@@ -80,7 +80,6 @@ internal static class ContextExtensions
     public static void Error(this SourceProductionContext ctx, string title, string message)
     {
         ctx.Report(title, message, "Error", DiagnosticSeverity.Error);
-
     }
     
     public static void Report(this SourceProductionContext ctx, string title, string message, string category = "Debug", DiagnosticSeverity severity = DiagnosticSeverity.Warning)

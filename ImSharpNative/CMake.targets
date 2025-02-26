@@ -2,7 +2,10 @@
 
     <Target Name="BuildCMakeProject" BeforeTargets="AssignTargetPaths" Inputs="@(CppFiles)" Outputs="$(CMakeBuildOutput)">
         <MakeDir Directories="$(CMakeBuildDir)" />
-        <Exec Command="$(CMakeExecutable) -S $(CMakeSourceDir) -B $(CMakeBuildDir) -G &quot;$(CMakeGenerator)&quot; -DCMAKE_BUILD_TYPE=$(BuildConfiguration) -DCMAKE_TOOLCHAIN_FILE=$(CMakeToolchainFile)" />
+        <PropertyGroup>
+            <CMakeGeneratorFlag Condition="'$(CMakeGenerator)' != ''">-G &quot;$(CMakeGenerator)&quot;</CMakeGeneratorFlag>
+        </PropertyGroup>
+        <Exec Command="$(CMakeExecutable) -S $(CMakeSourceDir) -B $(CMakeBuildDir) $(CMakeGeneratorFlag) -DCMAKE_BUILD_TYPE=$(BuildConfiguration) -DCMAKE_TOOLCHAIN_FILE=$(CMakeToolchainFile)" />
         <Exec Command="$(CMakeExecutable) --build $(CMakeBuildDir) --config $(BuildConfiguration)" />
     </Target>
 

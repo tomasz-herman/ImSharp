@@ -3,7 +3,6 @@
         <CMakeSourceDir>$(MSBuildThisFileDirectory)</CMakeSourceDir>
         <CMakeBuildDir>$(CMakeSourceDir)/cmake-build</CMakeBuildDir>
         <CMakeExecutable>cmake</CMakeExecutable>
-        <CMakeGenerator>Ninja</CMakeGenerator>
         <BuildConfiguration>$(Configuration)</BuildConfiguration>
 
         <VcpkgRoot>$(MSBuildThisFileDirectory)../vcpkg</VcpkgRoot>
