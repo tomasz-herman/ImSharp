@@ -9,7 +9,8 @@
             <CMakeGeneratorFlag Condition="'$(CMakeGenerator)' != ''">-G &quot;$(CMakeGenerator)&quot;</CMakeGeneratorFlag>
         </PropertyGroup>
         <Exec Command="$(CMakeExecutable) -S &quot;$(CMakeSourceDir)&quot; -B &quot;$(CMakeBuildDir)&quot; $(CMakeGeneratorFlag) -DCMAKE_BUILD_TYPE=$(BuildConfiguration)" />
-        <Exec Command="$(CMakeExecutable) --build &quot;$(CMakeBuildDir)&quot; --config $(BuildConfiguration) --parallel" />
+        <Exec Condition="'$(SkipNativeCompile)' != 'true'"
+              Command="$(CMakeExecutable) --build &quot;$(CMakeBuildDir)&quot; --config $(BuildConfiguration) --parallel" />
     </Target>
 
     <Target Name="CollectImSharpMetadata"

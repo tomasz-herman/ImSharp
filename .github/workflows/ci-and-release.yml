@@ -83,6 +83,7 @@ jobs:
           fi
           dotnet pack ImSharp/ImSharp.csproj -c Release -o artifacts \
             -p:Version="$VERSION" \
+            -p:SkipNativeCompile=true \
             -p:PrebuiltNativeRuntimesDir="$(pwd)/prebuilt-runtimes"
 
       - name: Upload NuGet artifacts
