@@ -1,43 +1,32 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
         <CMakeSourceDir>$(MSBuildThisFileDirectory)</CMakeSourceDir>
-        <CMakeBuildDir>$(CMakeSourceDir)/cmake-build</CMakeBuildDir>
+        <CMakeBuildDir>$(CMakeSourceDir)cmake-build</CMakeBuildDir>
         <CMakeExecutable>cmake</CMakeExecutable>
-        <BuildConfiguration>$(Configuration)</BuildConfiguration>
-
-        <VcpkgRoot>$(MSBuildThisFileDirectory)../vcpkg</VcpkgRoot>
-        <VcpkgTool>$(VcpkgRoot)/vcpkg</VcpkgTool>
-        <CMakeToolchainFile>$(VcpkgRoot)/scripts/buildsystems/vcpkg.cmake</CMakeToolchainFile>
+        <BuildConfiguration Condition="'$(BuildConfiguration)' == ''">$(Configuration)</BuildConfiguration>
+        <BuildConfiguration Condition="'$(BuildConfiguration)' == ''">Debug</BuildConfiguration>
     </PropertyGroup>
 
     <PropertyGroup>
-        <CMakeBuildOutput Condition="$([MSBuild]::IsOSPlatform('Windows'))">$(CMakeBuildDir)/ImSharpNative.dll</CMakeBuildOutput>
+        <NativeRid Condition="'$(NativeRid)' == '' and $([MSBuild]::IsOSPlatform('Windows'))">win-x64</NativeRid>
+        <NativeRid Condition="'$(NativeRid)' == '' and $([MSBuild]::IsOSPlatform('Linux'))">linux-x64</NativeRid>
+        <NativeRid Condition="'$(NativeRid)' == '' and $([MSBuild]::IsOSPlatform('OSX'))">osx-x64</NativeRid>
+
+        <CMakeBuildOutput Condition="$([MSBuild]::IsOSPlatform('Windows'))">$(CMakeBuildDir)/$(BuildConfiguration)/ImSharpNative.dll</CMakeBuildOutput>
         <CMakeBuildOutput Condition="$([MSBuild]::IsOSPlatform('Linux'))">$(CMakeBuildDir)/libImSharpNative.so</CMakeBuildOutput>
         <CMakeBuildOutput Condition="$([MSBuild]::IsOSPlatform('OSX'))">$(CMakeBuildDir)/libImSharpNative.dylib</CMakeBuildOutput>
     </PropertyGroup>
 
     <PropertyGroup>
         <DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
-        <CoreCompileDependsOn>
-          $(CoreCompileDependsOn);AssignTargetPaths
-        </CoreCompileDependsOn>
     </PropertyGroup>
 
     <ItemGroup>
-        <CppFiles Include="$(MSBuildThisFileDirectory)**\CMakeLists.txt" />
-        <CppFiles Include="$(MSBuildThisFileDirectory)**\*.cpp" />
-        <CppFiles Include="$(MSBuildThisFileDirectory)**\*.c" />
-        <CppFiles Include="$(MSBuildThisFileDirectory)**\*.h" />
-        <CppFiles Include="$(MSBuildThisFileDirectory)**\*.hpp" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <Content Include="$(CMakeBuildOutput)">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </Content>
-        <AdditionalFiles Include="$(CMakeBuildDir)/_deps/**/generator/output/definitions.json" />
-        <AdditionalFiles Include="$(CMakeBuildDir)/_deps/**/generator/output/structs_and_enums.json" />
-        <AdditionalFiles Include="$(CMakeBuildDir)/_deps/**/generator/output/typedefs_dict.json" />
+        <NativeCppFiles Include="$(CMakeSourceDir)CMakeLists.txt" />
+        <NativeCppFiles Include="$(CMakeSourceDir)*.cpp" />
+        <NativeCppFiles Include="$(CMakeSourceDir)*.c" />
+        <NativeCppFiles Include="$(CMakeSourceDir)*.h" />
+        <NativeCppFiles Include="$(CMakeSourceDir)*.hpp" />
     </ItemGroup>
 
     <Import Project="$(MSBuildThisFileDirectory)CMake.targets" />

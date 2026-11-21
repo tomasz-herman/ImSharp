@@ -912,3 +912,6 @@ FodyWeavers.xsd
 
 cmake-build
 .idea
+# Demo runtime state files
+imgui.ini
+NodeEditor.json

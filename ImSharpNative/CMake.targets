@@ -1,12 +1,25 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
-    <Target Name="BuildCMakeProject" BeforeTargets="AssignTargetPaths" Inputs="@(CppFiles)" Outputs="$(CMakeBuildOutput)">
+    <Target Name="BuildCMakeProject"
+            BeforeTargets="CollectImSharpMetadata;AssignTargetPaths;CoreCompile;_GetPackageFiles"
+            Inputs="@(NativeCppFiles)"
+            Outputs="$(CMakeBuildOutput)">
         <MakeDir Directories="$(CMakeBuildDir)" />
         <PropertyGroup>
             <CMakeGeneratorFlag Condition="'$(CMakeGenerator)' != ''">-G &quot;$(CMakeGenerator)&quot;</CMakeGeneratorFlag>
         </PropertyGroup>
-        <Exec Command="$(CMakeExecutable) -S $(CMakeSourceDir) -B $(CMakeBuildDir) $(CMakeGeneratorFlag) -DCMAKE_BUILD_TYPE=$(BuildConfiguration) -DCMAKE_TOOLCHAIN_FILE=$(CMakeToolchainFile)" />
-        <Exec Command="$(CMakeExecutable) --build $(CMakeBuildDir) --config $(BuildConfiguration)" />
+        <Exec Command="$(CMakeExecutable) -S &quot;$(CMakeSourceDir)&quot; -B &quot;$(CMakeBuildDir)&quot; $(CMakeGeneratorFlag) -DCMAKE_BUILD_TYPE=$(BuildConfiguration)" />
+        <Exec Command="$(CMakeExecutable) --build &quot;$(CMakeBuildDir)&quot; --config $(BuildConfiguration) --parallel" />
+    </Target>
+
+    <Target Name="CollectImSharpMetadata"
+            DependsOnTargets="BuildCMakeProject"
+            BeforeTargets="GenerateMSBuildEditorConfigFileCore;CoreCompile;AssignTargetPaths">
+        <ItemGroup>
+            <AdditionalFiles Include="$(CMakeBuildDir)/_deps/**/generator/output/definitions.json" />
+            <AdditionalFiles Include="$(CMakeBuildDir)/_deps/**/generator/output/structs_and_enums.json" />
+            <AdditionalFiles Include="$(CMakeBuildDir)/_deps/**/generator/output/typedefs_dict.json" />
+        </ItemGroup>
     </Target>
 
 </Project>
