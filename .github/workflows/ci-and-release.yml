@@ -57,6 +57,9 @@ jobs:
   pack-and-publish:
     needs: build-native
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
     steps:
       - uses: actions/checkout@v4
 
@@ -88,10 +91,17 @@ jobs:
           name: nuget-packages
           path: artifacts/*.nupkg
 
+      - name: NuGet Trusted Publishing Login
+        if: startsWith(github.ref, 'refs/tags/v') && vars.NUGET_USER != ''
+        id: nuget-login
+        uses: NuGet/login@v1
+        with:
+          user: ${{ vars.NUGET_USER }}
+
       - name: Push to NuGet.org
-        if: startsWith(github.ref, 'refs/tags/v') && secrets.NUGET_API_KEY != ''
+        if: startsWith(github.ref, 'refs/tags/v') && vars.NUGET_USER != ''
         run: |
           dotnet nuget push artifacts/*.nupkg \
-            --api-key "${{ secrets.NUGET_API_KEY }}" \
+            --api-key "${{ steps.nuget-login.outputs.NUGET_API_KEY }}" \
             --source https://api.nuget.org/v3/index.json \
             --skip-duplicate
