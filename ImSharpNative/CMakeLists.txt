@@ -357,22 +357,36 @@ add_library(${PROJECT_NAME} SHARED ${ALL_SOURCES})
 # Platform-specific GLFW & OpenGL linkage
 # ==============================================================================
 if (WIN32)
-    set(GLFW_LIB "${CMAKE_BINARY_DIR}/glfw_nuget/runtimes/win-x64/native/glfw3.dll")
+    set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
+    set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+    set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+    set(GLFW_INSTALL OFF CACHE BOOL "" FORCE)
+    add_subdirectory(${glfw_headers_SOURCE_DIR} ${CMAKE_BINARY_DIR}/glfw_build)
+
+    set_target_properties(${PROJECT_NAME} PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
     target_compile_definitions(${PROJECT_NAME} PRIVATE
         IMGUI_API=__declspec\(dllexport\)
         IMPLOT_API=__declspec\(dllexport\)
         IMPLOT3D_API=__declspec\(dllexport\)
         "IMGUI_IMPL_API=extern \"C\" __declspec(dllexport)"
     )
-    target_link_libraries(${PROJECT_NAME} PRIVATE opengl32 imm32)
+    target_link_libraries(${PROJECT_NAME} PRIVATE glfw opengl32 imm32)
 elseif (APPLE)
-    set(GLFW_LIB "${CMAKE_BINARY_DIR}/glfw_nuget/runtimes/osx-x64/native/libglfw.3.dylib")
+    if (CMAKE_SYSTEM_PROCESSOR MATCHES "arm64|aarch64")
+        set(GLFW_LIB "${CMAKE_BINARY_DIR}/glfw_nuget/runtimes/osx-arm64/native/libglfw.3.dylib")
+    else()
+        set(GLFW_LIB "${CMAKE_BINARY_DIR}/glfw_nuget/runtimes/osx-x64/native/libglfw.3.dylib")
+    endif()
     add_library(glfw3 SHARED IMPORTED)
     set_target_properties(glfw3 PROPERTIES IMPORTED_LOCATION "${GLFW_LIB}")
     target_compile_definitions(${PROJECT_NAME} PRIVATE
         "IMGUI_IMPL_API=extern \"C\""
     )
     target_link_libraries(${PROJECT_NAME} PRIVATE glfw3 "-framework OpenGL")
+    set_target_properties(${PROJECT_NAME} PROPERTIES
+        BUILD_RPATH "@loader_path:@loader_path/runtimes/osx-arm64/native:@loader_path/runtimes/osx-x64/native"
+        INSTALL_RPATH "@loader_path:@loader_path/runtimes/osx-arm64/native:@loader_path/runtimes/osx-x64/native"
+    )
 elseif (UNIX)
     set(GLFW_LIB "${CMAKE_BINARY_DIR}/glfw_nuget/runtimes/linux-x64/native/libglfw.so.3")
     add_library(glfw3 SHARED IMPORTED)

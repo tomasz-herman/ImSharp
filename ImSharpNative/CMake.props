@@ -1,7 +1,7 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
-        <CMakeSourceDir>$(MSBuildThisFileDirectory)</CMakeSourceDir>
-        <CMakeBuildDir>$(CMakeSourceDir)cmake-build</CMakeBuildDir>
+        <CMakeSourceDir>$([System.String]::Copy('$(MSBuildThisFileDirectory)').TrimEnd('\').TrimEnd('/'))</CMakeSourceDir>
+        <CMakeBuildDir>$(CMakeSourceDir)/cmake-build</CMakeBuildDir>
         <CMakeExecutable>cmake</CMakeExecutable>
         <BuildConfiguration Condition="'$(BuildConfiguration)' == ''">$(Configuration)</BuildConfiguration>
         <BuildConfiguration Condition="'$(BuildConfiguration)' == ''">Debug</BuildConfiguration>
@@ -10,6 +10,7 @@
     <PropertyGroup>
         <NativeRid Condition="'$(NativeRid)' == '' and $([MSBuild]::IsOSPlatform('Windows'))">win-x64</NativeRid>
         <NativeRid Condition="'$(NativeRid)' == '' and $([MSBuild]::IsOSPlatform('Linux'))">linux-x64</NativeRid>
+        <NativeRid Condition="'$(NativeRid)' == '' and $([MSBuild]::IsOSPlatform('OSX')) and '$([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture)' == 'Arm64'">osx-arm64</NativeRid>
         <NativeRid Condition="'$(NativeRid)' == '' and $([MSBuild]::IsOSPlatform('OSX'))">osx-x64</NativeRid>
 
         <CMakeBuildOutput Condition="$([MSBuild]::IsOSPlatform('Windows'))">$(CMakeBuildDir)/$(BuildConfiguration)/ImSharpNative.dll</CMakeBuildOutput>
@@ -22,11 +23,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <NativeCppFiles Include="$(CMakeSourceDir)CMakeLists.txt" />
-        <NativeCppFiles Include="$(CMakeSourceDir)*.cpp" />
-        <NativeCppFiles Include="$(CMakeSourceDir)*.c" />
-        <NativeCppFiles Include="$(CMakeSourceDir)*.h" />
-        <NativeCppFiles Include="$(CMakeSourceDir)*.hpp" />
+        <NativeCppFiles Include="$(CMakeSourceDir)/CMakeLists.txt" />
+        <NativeCppFiles Include="$(CMakeSourceDir)/*.cpp" />
+        <NativeCppFiles Include="$(CMakeSourceDir)/*.c" />
+        <NativeCppFiles Include="$(CMakeSourceDir)/*.h" />
+        <NativeCppFiles Include="$(CMakeSourceDir)/*.hpp" />
     </ItemGroup>
 
     <Import Project="$(MSBuildThisFileDirectory)CMake.targets" />

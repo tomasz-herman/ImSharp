@@ -252,6 +252,7 @@ public class SafeApiTests
         nint lib = NativeLibrary.Load("ImSharpNative", typeof(ImGui).Assembly, null);
         try
         {
+            // Always-built cross-platform backend symbols
             string[] expectedBackendSymbols =
             [
                 "ImGui_ImplGlfw_InitForOpenGL",
@@ -266,13 +267,6 @@ public class SafeApiTests
                 "ImGui_ImplOpenGL2_RenderDrawData",
                 "ImGui_ImplNull_Init",
                 "ImGui_ImplNullRender_RenderDrawData",
-                "ImGui_ImplVulkan_Init",
-                "ImGui_ImplVulkan_RenderDrawData",
-                "ImGui_ImplSDL2_InitForOpenGL",
-                "ImGui_ImplSDLRenderer2_Init",
-                "ImGui_ImplSDL3_InitForOpenGL",
-                "ImGui_ImplSDLRenderer3_Init",
-                "ImGui_ImplSDLGPU3_Init",
             ];
 
             foreach (var sym in expectedBackendSymbols)
