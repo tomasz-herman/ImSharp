@@ -435,6 +435,22 @@ target_link_libraries(${PROJECT_NAME} PRIVATE ${BACKEND_LINK_LIBS})
 
 target_include_directories(${PROJECT_NAME} PRIVATE ${ALL_INCLUDES})
 
+if (MSVC)
+    # Suppress benign upstream vendor warnings in fetched cimgui-family repos
+    target_compile_options(${PROJECT_NAME} PRIVATE /wd4190 /wd4715 /wd4996)
+elseif (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    target_compile_options(${PROJECT_NAME} PRIVATE
+        -Wno-deprecated-declarations
+        -Wno-return-type
+        -Wno-return-type-c-linkage
+    )
+elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    target_compile_options(${PROJECT_NAME} PRIVATE
+        -Wno-deprecated-declarations
+        -Wno-return-type
+    )
+endif()
+
 if (UNIX AND NOT APPLE)
     target_compile_options(${PROJECT_NAME} PRIVATE -fvisibility=default)
     target_link_options(${PROJECT_NAME} PRIVATE -Wl,--no-undefined)

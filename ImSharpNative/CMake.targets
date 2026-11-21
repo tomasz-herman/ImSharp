@@ -7,8 +7,9 @@
         <MakeDir Directories="$(CMakeBuildDir)" />
         <PropertyGroup>
             <CMakeGeneratorFlag Condition="'$(CMakeGenerator)' != ''">-G &quot;$(CMakeGenerator)&quot;</CMakeGeneratorFlag>
+            <CMakeBuildTypeFlag Condition="!$([MSBuild]::IsOSPlatform('Windows'))">-DCMAKE_BUILD_TYPE=$(BuildConfiguration)</CMakeBuildTypeFlag>
         </PropertyGroup>
-        <Exec Command="$(CMakeExecutable) -S &quot;$(CMakeSourceDir)&quot; -B &quot;$(CMakeBuildDir)&quot; $(CMakeGeneratorFlag) -DCMAKE_BUILD_TYPE=$(BuildConfiguration)" />
+        <Exec Command="$(CMakeExecutable) -S &quot;$(CMakeSourceDir)&quot; -B &quot;$(CMakeBuildDir)&quot; $(CMakeGeneratorFlag) $(CMakeBuildTypeFlag)" />
         <Exec Condition="'$(SkipNativeCompile)' != 'true'"
               Command="$(CMakeExecutable) --build &quot;$(CMakeBuildDir)&quot; --config $(BuildConfiguration) --parallel" />
     </Target>
