@@ -9,29 +9,29 @@ public static partial class ImGuiImplWin32
     private const string LibraryName = "ImSharpNative";
 
     [return: MarshalAs(UnmanagedType.U1)]
-    [LibraryImport(LibraryName, EntryPoint = "ImGui_ImplWin32_Init")]
+    [LibraryImport(LibraryName, EntryPoint = "ImGuiImplWin32_Init")]
     public static partial bool Init(nint hwnd);
 
     [return: MarshalAs(UnmanagedType.U1)]
-    [LibraryImport(LibraryName, EntryPoint = "ImGui_ImplWin32_InitForOpenGL")]
+    [LibraryImport(LibraryName, EntryPoint = "ImGuiImplWin32_InitForOpenGL")]
     public static partial bool InitForOpenGL(nint hwnd);
 
-    [LibraryImport(LibraryName, EntryPoint = "ImGui_ImplWin32_Shutdown")]
+    [LibraryImport(LibraryName, EntryPoint = "ImGuiImplWin32_Shutdown")]
     public static partial void Shutdown();
 
-    [LibraryImport(LibraryName, EntryPoint = "ImGui_ImplWin32_NewFrame")]
+    [LibraryImport(LibraryName, EntryPoint = "ImGuiImplWin32_NewFrame")]
     public static partial void NewFrame();
 
-    [LibraryImport(LibraryName, EntryPoint = "ImGui_ImplWin32_EnableDpiAwareness")]
+    [LibraryImport(LibraryName, EntryPoint = "ImGuiImplWin32_EnableDpiAwareness")]
     public static partial void EnableDpiAwareness();
 
-    [LibraryImport(LibraryName, EntryPoint = "ImGui_ImplWin32_GetDpiScaleForHwnd")]
+    [LibraryImport(LibraryName, EntryPoint = "ImGuiImplWin32_GetDpiScaleForHwnd")]
     public static partial float GetDpiScaleForHwnd(nint hwnd);
 
-    [LibraryImport(LibraryName, EntryPoint = "ImGui_ImplWin32_GetDpiScaleForMonitor")]
+    [LibraryImport(LibraryName, EntryPoint = "ImGuiImplWin32_GetDpiScaleForMonitor")]
     public static partial float GetDpiScaleForMonitor(nint monitor);
 
-    [LibraryImport(LibraryName, EntryPoint = "ImGui_ImplWin32_EnableAlphaCompositing")]
+    [LibraryImport(LibraryName, EntryPoint = "ImGuiImplWin32_EnableAlphaCompositing")]
     public static partial void EnableAlphaCompositing(nint hwnd);
 }
 

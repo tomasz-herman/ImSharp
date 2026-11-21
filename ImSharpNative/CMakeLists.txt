@@ -368,7 +368,24 @@ if (WIN32)
         IMGUI_API=__declspec\(dllexport\)
         IMPLOT_API=__declspec\(dllexport\)
         IMPLOT3D_API=__declspec\(dllexport\)
-        "IMGUI_IMPL_API=extern \"C\" __declspec(dllexport)"
+    )
+    # Apply extern "C" IMGUI_IMPL_API to all backend sources except imgui_impl_win32.cpp
+    # (which writes `extern IMGUI_IMPL_API` on WndProcHandler and is wrapped in BackendImpl.cpp)
+    set(WIN32_C_BACKENDS
+        ${IMGUI_DIR}/backends/imgui_impl_glfw.cpp
+        ${IMGUI_DIR}/backends/imgui_impl_opengl3.cpp
+        ${IMGUI_DIR}/backends/imgui_impl_opengl2.cpp
+        ${IMGUI_DIR}/backends/imgui_impl_null.cpp
+        ${IMGUI_DIR}/backends/imgui_impl_dx9.cpp
+        ${IMGUI_DIR}/backends/imgui_impl_dx10.cpp
+        ${IMGUI_DIR}/backends/imgui_impl_dx11.cpp
+        ${IMGUI_DIR}/backends/imgui_impl_dx12.cpp
+    )
+    set_source_files_properties(${WIN32_C_BACKENDS} PROPERTIES
+        COMPILE_DEFINITIONS "IMGUI_IMPL_API=extern \"C\" __declspec(dllexport)"
+    )
+    set_source_files_properties(${IMGUI_DIR}/backends/imgui_impl_win32.cpp PROPERTIES
+        COMPILE_DEFINITIONS "IMGUI_IMPL_API=__declspec(dllexport)"
     )
     target_link_libraries(${PROJECT_NAME} PRIVATE glfw opengl32 imm32)
 elseif (APPLE)
